@@ -35,7 +35,7 @@ class QueryGenerator(ABC):
 
     @property
     def get_primary_key(self):
-        return "id serial NOT NULL PRIMARY KEY"
+        return "id SERIAL PRIMARY KEY"
 
     @property
     def get_int_fields(self):
@@ -61,10 +61,10 @@ class QueryGenerator(ABC):
             )
         ]
         query = [
-            f"{i.name} int {i.dtype.value} {i.references.tname}(id)"
+            f"{i.name} integer {i.dtype.value} app_{i.references.tname}(id)"
             for i in foreign_keys
         ]
-        return ",".join(query) if len(query) > 1 else ""
+        return ",".join(query)
 
     @abstractmethod
     def generate_query(self) -> str:

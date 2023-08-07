@@ -5,7 +5,7 @@ class DTYPE(Enum):
     INT = "INT"
     VARCHAR = "VARCHAR"
     DATETIME = "TIMESTAMP"
-    FOREIGN = "FOREIGN KEY REFERENCES"
+    FOREIGN = "REFERENCES"
 
 
 class Field:
