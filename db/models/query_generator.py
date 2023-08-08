@@ -8,6 +8,19 @@ class QueryGenerator(ABC):
         self.model = model
 
     @property
+    def get_unique_fields(self):
+        char_fields = [
+            i
+            for i in self.model.fields
+            if isinstance(
+                i,
+                CharField,
+            )
+        ]
+        query = [f"UNIQUE({i.name})" for i in char_fields if i.unique]
+        return ",".join(query)
+
+    @property
     def get_char_fields(self):
         char_fields = [
             i
@@ -81,6 +94,7 @@ class CreateQueryGenerator(QueryGenerator):
             self.get_char_fields,
             self.get_timestamp_fields,
             self.get_int_fields,
+            self.get_unique_fields,
         ]
         str_queries = ",".join([i for i in queries if len(i) > 1])
         return (

@@ -15,12 +15,13 @@ class Field:
 
 
 class CharField(Field):
-    def __init__(self, name, length=256):
+    def __init__(self, name, length=256, unique=False):
         super(CharField, self).__init__(
             name=name,
             dtype=DTYPE.VARCHAR,
         )
         self.length = length
+        self.unique = unique
 
 
 class IntField(Field):

@@ -4,17 +4,25 @@ from models.users import Users
 from models.artists import Artists
 from models.musics import Musics
 from models.roles import Roles
-from models.user_roles import UserRoles
 from ordered_set import OrderedSet
 from db.models.check import CheckTables
-from db.crud import CRUDBase
+from flask_cors import CORS
+from preload import Preload
+from views import HealthCheckView
+from views.register import RegisterUserView
 
 app = Flask(__name__)
+CORS(app)
+
 config = get_config()
 app.config.from_object(config)
 
-models = OrderedSet([Roles, Users, Artists, Musics, UserRoles])
+models = OrderedSet([Roles, Users, Artists, Musics])
 
 CheckTables(models=models).start()
 
+Preload().start()
 
+
+app.add_url_rule("/", view_func=HealthCheckView.as_view("health_check"))
+app.add_url_rule("/register", view_func=RegisterUserView.as_view("register"))

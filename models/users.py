@@ -8,7 +8,7 @@ class Users(Model):
         super(Users, self).__init__(tname="users")
         self.fields.add(CharField(name="first_name"))
         self.fields.add(CharField(name="last_name"))
-        self.fields.add(CharField(name="email"))
+        self.fields.add(CharField(name="email", unique=True))
         self.fields.add(CharField(name="password", length=500))
         self.fields.add(CharField(name="phone", length=20))
         self.fields.add(DateTimeField(name="dob"))

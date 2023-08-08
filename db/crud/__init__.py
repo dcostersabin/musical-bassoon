@@ -3,13 +3,14 @@ from typing import Union
 from colorama import Fore, Style
 from db.models import Model
 from db.models import DTYPE
-from psycopg2 import OperationalError, DatabaseError
+from psycopg2 import OperationalError, DatabaseError, IntegrityError
 
 
 class CRUDBase:
     def __init__(self, model: Model):
         self.model = model
         self.conn = conn
+        self.errors = set()
 
     @property
     def fields(self) -> set:
@@ -35,6 +36,7 @@ class CRUDBase:
 
     def _execute_query(self, query: str, values: tuple) -> Union[list, None]:
         with self.conn.cursor() as cursor:
+            self.errors.clear()
             try:
                 cursor.execute(query, values)
                 self.conn.commit()
@@ -51,9 +53,13 @@ class CRUDBase:
                     return rowdicts
                 except TypeError:
                     return None
-
-            except (OperationalError, DatabaseError, Exception) as e:
+            except IntegrityError:
+                self.errors.add(IntegrityError)
+            except DatabaseError:
+                self.errors.add(DatabaseError)
+            except (OperationalError, Exception) as e:
                 print(e)
+                self.errors.add(OperationalError)
                 print(f"{Fore.RED} Could Not Execute Query {query}{Style.RESET_ALL}")
 
     def insert(self, data: dict):
