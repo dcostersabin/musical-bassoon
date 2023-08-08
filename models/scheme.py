@@ -18,3 +18,8 @@ class UserScheme(Schema):
     gender = fields.Str(required=True, validate=OneOf(["M", "F"]))
     address = fields.Str(required=True, validate=Length(min=3, max=255))
     role = fields.Int(required=True)
+
+
+class LoginScheme(Schema):
+    email = fields.Email(required=True)
+    password = fields.Str(required=True, validate=Length(min=10, max=255))

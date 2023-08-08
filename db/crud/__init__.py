@@ -79,7 +79,7 @@ class CRUDBase:
         self._execute_query(query=query, values=values)
 
     def get_one(self, id: str):
-        query = f"SELECT * FROM app_{self.model().tname} WHERE id = %s;"
+        query = f"SELECT * FROM app_{self.model().tname} WHERE id = %s LIMIT 1;"
         values = (id,)
         data = self._execute_query(query=query, values=values)
         return data[0] if len(data) > 0 else None
@@ -94,4 +94,24 @@ class CRUDBase:
 
         query = f"SELECT * FROM app_{self.model().tname} {order_by_query} OFFSET {int(offset)} LIMIT {int(page_size)} ;"
         values = (offset, page_size)
+        return self._execute_query(query=query, values=values)
+
+    def filter(self, data: dict, condition_and=True):
+        valid_fields = self._get_valid_fields(fields=set(data.keys()))
+
+        formatted_values = self._format_values(valid_fields=valid_fields)
+
+        where_query = [
+            f"{i}={j}" for i, j in zip(valid_fields, formatted_values.split(","))
+        ]
+
+        if condition_and:
+            where_query = " AND ".join(where_query)
+        else:
+            where_query = " OR ".join(where_query)
+
+        query = f"SELECT * FROM app_{self.model().tname} WHERE {where_query};"
+
+        values = tuple([data.get(i) for i in valid_fields])
+
         return self._execute_query(query=query, values=values)

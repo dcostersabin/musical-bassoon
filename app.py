@@ -10,9 +10,12 @@ from flask_cors import CORS
 from preload import Preload
 from views import HealthCheckView
 from views.register import RegisterUserView
+from views.login import LoginView
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 CORS(app)
+jwt = JWTManager(app)
 
 config = get_config()
 app.config.from_object(config)
@@ -26,3 +29,4 @@ Preload().start()
 
 app.add_url_rule("/", view_func=HealthCheckView.as_view("health_check"))
 app.add_url_rule("/register", view_func=RegisterUserView.as_view("register"))
+app.add_url_rule("/login", view_func=LoginView.as_view("login"))
