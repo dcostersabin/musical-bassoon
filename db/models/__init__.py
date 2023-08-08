@@ -38,6 +38,10 @@ class Model:
         self.fields = set()
         self.tname = tname.lower()
 
+    @property
+    def dtype_map(self):
+        return {i.name: i.dtype for i in self.fields}
+
 
 class ForeignKeyField(Field):
     def __init__(self, name, references: Model):

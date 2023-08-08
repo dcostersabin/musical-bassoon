@@ -14,6 +14,6 @@ class Users(Model):
         self.fields.add(DateTimeField(name="dob"))
         self.fields.add(CharField(name="gender", length=1))
         self.fields.add(CharField(name="address"))
-        self.fields.add(DateTimeField(name="create_at"))
+        self.fields.add(DateTimeField(name="created_at"))
         self.fields.add(DateTimeField(name="updated_at"))
         self.fields.add(ForeignKeyField(name="role", references=Roles()))
