@@ -26,7 +26,8 @@ class UserView(MethodView):
     def _get_filtered_users(self):
         page = request.args.get("page", 1)
         role = int(request.args.get("role", 1))
-        data = self.crud_base.filter(data={"role": role}, page_number=page)
+        data = self.crud_base.filter(data={"role": role}, page_number=int(page))
+        _ = [i.pop("password") for i in data]
         return jsonify({"count": len(data), "page": int(page), "user": data}), 200
 
     @jwt_required()
@@ -41,3 +42,16 @@ class UserView(MethodView):
             return self._get_filtered_users()
 
         return self._get_all_users()
+
+    @jwt_required()
+    @super_admin_only
+    def delete(self):
+        user_id = request.args.get("id", None)
+        if user_id is None:
+            return jsonify(), 400
+
+        self.crud_base.delete(id=user_id)
+
+        code = 204 if len(self.crud_base.errors) == 0 else 400
+
+        return jsonify(), code
