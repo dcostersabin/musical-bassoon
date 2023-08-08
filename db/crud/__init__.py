@@ -93,10 +93,24 @@ class CRUDBase:
         order_by_query = f"ORDER BY {order_by} {sort_type}"
 
         query = f"SELECT * FROM app_{self.model().tname} {order_by_query} OFFSET {int(offset)} LIMIT {int(page_size)} ;"
-        values = (offset, page_size)
-        return self._execute_query(query=query, values=values)
+        return self._execute_query(query=query, values=tuple())
 
-    def filter(self, data: dict, condition_and=True):
+    def filter(
+        self,
+        data: dict,
+        condition_and=True,
+        page_number=1,
+        page_size=10,
+        order_by="id",
+        dec=True,
+    ):
+        offset = (page_number - 1) * page_size
+
+        order_by = order_by if order_by in self.fields else "id"
+
+        sort_type = "DESC" if dec else "AES"
+        order_by_query = f"ORDER BY {order_by} {sort_type}"
+
         valid_fields = self._get_valid_fields(fields=set(data.keys()))
 
         formatted_values = self._format_values(valid_fields=valid_fields)
@@ -110,7 +124,10 @@ class CRUDBase:
         else:
             where_query = " OR ".join(where_query)
 
-        query = f"SELECT * FROM app_{self.model().tname} WHERE {where_query};"
+        query = (
+            f"SELECT * FROM app_{self.model().tname} WHERE {where_query} {order_by_query} OFFSET "
+            f"{int(offset)} LIMIT {int(page_size)};"
+        )
 
         values = tuple([data.get(i) for i in valid_fields])
 
