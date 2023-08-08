@@ -11,6 +11,7 @@ from preload import Preload
 from views import HealthCheckView
 from views.register import RegisterUserView
 from views.login import LoginView
+from views.users import UserView
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -30,3 +31,4 @@ Preload().start()
 app.add_url_rule("/", view_func=HealthCheckView.as_view("health_check"))
 app.add_url_rule("/register", view_func=RegisterUserView.as_view("register"))
 app.add_url_rule("/login", view_func=LoginView.as_view("login"))
+app.add_url_rule("/users", view_func=UserView.as_view("user"))

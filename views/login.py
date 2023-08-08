@@ -17,7 +17,10 @@ class LoginView(MethodView):
                 return jsonify({"email": "Invalid Email"}), 400
 
             access_token = create_access_token(
-                identity=login_service.user.get("email"),
+                identity={
+                    "email": login_service.user.get("email"),
+                    "role": login_service.user.get("role"),
+                },
             )
             return jsonify(access_token=access_token), 200
         except ValidationError as err:
