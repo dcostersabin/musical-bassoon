@@ -98,6 +98,21 @@ class CRUDBase:
         query = f"SELECT * FROM app_{self.model().tname} {order_by_query} OFFSET {int(offset)} LIMIT {int(page_size)} ;"
         return self._execute_query(query=query, values=tuple())
 
+    def update(self, id: str, data: dict):
+        valid_fields = self._get_valid_fields(fields=set(data.keys()))
+        formatted_values = self._format_values(valid_fields=valid_fields)
+
+        update_query = [
+            f"{i}={j}" for i, j in zip(valid_fields, formatted_values.split(","))
+        ]
+
+        update_query = ", ".join(update_query)
+
+        query = f"UPDATE app_{self.model().tname} SET {update_query} WHERE id=%s"
+        values = [data.get(i) for i in valid_fields]
+        values.append(id)
+        self._execute_query(query=query, values=values)
+
     def filter(
         self,
         data: dict,
