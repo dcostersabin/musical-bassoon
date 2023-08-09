@@ -74,7 +74,7 @@ class QueryGenerator(ABC):
             )
         ]
         query = [
-            f"{i.name} integer {i.dtype.value} app_{i.references.tname}(id)"
+            f"{i.name} integer {i.dtype.value} app_{i.references.tname}(id) ON DELETE CASCADE"
             for i in foreign_keys
         ]
         return ",".join(query)
