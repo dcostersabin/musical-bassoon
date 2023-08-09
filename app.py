@@ -35,3 +35,6 @@ app.add_url_rule("/login", view_func=LoginView.as_view("login"))
 app.add_url_rule("/users", view_func=UserView.as_view("user"))
 app.add_url_rule("/music", view_func=MusicView.as_view("music"))
 app.add_url_rule("/dump", view_func=DumpDataView.as_view("dump"))
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
