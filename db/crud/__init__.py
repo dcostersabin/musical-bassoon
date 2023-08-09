@@ -28,6 +28,7 @@ class CRUDBase:
                 dtype_map.get(field) is DTYPE.VARCHAR
                 or dtype_map.get(field) is DTYPE.FOREIGN
                 or dtype_map.get(field) is DTYPE.DATETIME
+                or field == "id"
             ):
                 formatted_values.append("%s")
             else:
@@ -53,9 +54,11 @@ class CRUDBase:
                     return rowdicts
                 except TypeError:
                     return None
-            except IntegrityError:
+            except IntegrityError as e:
+                print(e)
                 self.errors.add(IntegrityError)
-            except DatabaseError:
+            except DatabaseError as e:
+                print(e)
                 self.errors.add(DatabaseError)
             except (OperationalError, Exception) as e:
                 print(e)
@@ -112,6 +115,9 @@ class CRUDBase:
         order_by_query = f"ORDER BY {order_by} {sort_type}"
 
         valid_fields = self._get_valid_fields(fields=set(data.keys()))
+
+        if "id" in data:
+            valid_fields.update({"id"})
 
         formatted_values = self._format_values(valid_fields=valid_fields)
 

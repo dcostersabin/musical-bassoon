@@ -23,3 +23,12 @@ class UserScheme(Schema):
 class LoginScheme(Schema):
     email = fields.Email(required=True)
     password = fields.Str(required=True, validate=Length(min=10, max=255))
+
+
+class MusicScheme(Schema):
+    user_id = fields.Int(required=True)
+    title = fields.Str(required=True, validate=Length(min=3, max=255))
+    album_name = fields.Str(required=True, validate=Length(min=3, max=255))
+    genre = fields.Str(
+        required=True, validate=OneOf(["country", "classic", "rock", "jazz"])
+    )

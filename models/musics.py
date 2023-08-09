@@ -1,6 +1,6 @@
 from db.models import Model
 from db.models import CharField, DateTimeField, ForeignKeyField
-from models.artists import Artists
+from models.users import Users
 
 
 class Musics(Model):
@@ -8,12 +8,12 @@ class Musics(Model):
         super(Musics, self).__init__(tname="musics")
         self.fields.add(
             ForeignKeyField(
-                name="artist_id",
-                references=Artists(),
+                name="user_id",
+                references=Users(),
             )
         )
         self.fields.add(CharField(name="title"))
         self.fields.add(CharField(name="album_name"))
         self.fields.add(CharField(name="genre", length=10))
-        self.fields.add(DateTimeField(name="create_at"))
+        self.fields.add(DateTimeField(name="created_at"))
         self.fields.add(DateTimeField(name="updated_at"))
