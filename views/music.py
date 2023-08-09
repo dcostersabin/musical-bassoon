@@ -5,8 +5,10 @@ from marshmallow import ValidationError
 from flask import request
 from flask import jsonify
 from flask import Response
+from models.scheme import MusicUpdateScheme
 from services.music_create import MusicCreateService
 from services.music_delete import MusicDeleteService
+from services.music_update import MusicUpdateService
 from permissions import add_music_permission
 from flask_jwt_extended import get_jwt_identity
 from models.musics import Musics
@@ -89,3 +91,25 @@ class MusicView(MethodView):
         service.start()
         status_code = 204 if service.status else 400
         return Response(status=status_code)
+
+    @jwt_required()
+    def put(self):
+        scheme = MusicUpdateScheme()
+
+        info = get_jwt_identity()
+        music_id = request.args.get("music_id", None)
+        if music_id is None:
+            return Response(status=400)
+
+        try:
+            data = scheme.load(request.json)
+            service = MusicUpdateService(
+                music_id=music_id,
+                data=data,
+                permission=info,
+            )
+            service.start()
+            status_code = 200 if service.status else 400
+            return Response(status=status_code)
+        except ValidationError as err:
+            return jsonify(err.messages), 400

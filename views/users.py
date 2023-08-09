@@ -1,6 +1,7 @@
 from flask.views import MethodView
 from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
 from permissions import super_admin_only
 from flask import request
 from models.users import Users
@@ -29,10 +30,18 @@ class UserView(MethodView):
         return jsonify({"count": len(data), "page": int(page), "user": data}), 200
 
     def _get_filtered_users(self):
+        info = get_jwt_identity()
+
         page = request.args.get("page", 1)
+
         role = int(request.args.get("role", 1))
+
+        role = role if int(info.get("role") == 1) else 3
+
         data = self.crud_base.filter(data={"role": role}, page_number=int(page))
+
         _ = [i.pop("password") for i in data]
+
         return jsonify({"count": len(data), "page": int(page), "user": data}), 200
 
     @jwt_required()

@@ -31,13 +31,14 @@ class CsvGeneratorService:
     def _check_artist(self) -> bool:
         useless_fields = ["password", "id", "role", "created_at", "updated_at"]
         data = self.user_crud_base.filter({"id": self.artist_id, "role": 3})
-        if len(data) == 1:
-            self.user = data[0]
-            _ = [self.user.pop(field) for field in useless_fields]
-            self.user["dob"] = self.user.get("dob").strftime("%Y-%m-%d %H:%M:%S")
-            return True
 
-        return False
+        if len(data) != 1:
+            return False
+
+        self.user = data[0]
+        _ = [self.user.pop(field) for field in useless_fields]
+        self.user["dob"] = self.user.get("dob").strftime("%Y-%m-%d %H:%M:%S")
+        return True
 
     def _get_musics(self):
         useless_fields = ["id", "user_id", "created_at", "updated_at"]

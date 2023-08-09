@@ -47,3 +47,11 @@ class UserUpdateScheme(Schema):
     dob = fields.Date(required=True)
     gender = fields.Str(required=True, validate=OneOf(["M", "F"]))
     address = fields.Str(required=True, validate=Length(min=3, max=255))
+
+
+class MusicUpdateScheme(Schema):
+    title = fields.Str(required=True, validate=Length(min=3, max=255))
+    album_name = fields.Str(required=True, validate=Length(min=3, max=255))
+    genre = fields.Str(
+        required=True, validate=OneOf(["country", "classic", "rock", "jazz"])
+    )
