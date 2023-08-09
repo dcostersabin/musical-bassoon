@@ -92,7 +92,7 @@ class CRUDBase:
 
         order_by = order_by if order_by in self.fields else "id"
 
-        sort_type = "DESC" if dec else "AES"
+        sort_type = "DESC" if dec else "ASC"
         order_by_query = f"ORDER BY {order_by} {sort_type}"
 
         query = f"SELECT * FROM app_{self.model().tname} {order_by_query} OFFSET {int(offset)} LIMIT {int(page_size)} ;"
@@ -111,7 +111,7 @@ class CRUDBase:
 
         order_by = order_by if order_by in self.fields else "id"
 
-        sort_type = "DESC" if dec else "AES"
+        sort_type = "DESC" if dec else "ASC"
         order_by_query = f"ORDER BY {order_by} {sort_type}"
 
         valid_fields = self._get_valid_fields(fields=set(data.keys()))
