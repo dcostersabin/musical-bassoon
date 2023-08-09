@@ -1,10 +1,15 @@
 from flask.views import MethodView
+from marshmallow import ValidationError
 from flask_jwt_extended import jwt_required
 from permissions import super_admin_only
 from flask import request
 from models.users import Users
+from flask import Response
 from db.crud import CRUDBase
 from flask import jsonify
+from services.user_update import UserUpdateService
+from models.scheme import UserUpdateScheme
+from permissions import super_admin_and_artist_manager_only
 
 
 class UserView(MethodView):
@@ -55,3 +60,21 @@ class UserView(MethodView):
         code = 204 if len(self.crud_base.errors) == 0 else 400
 
         return jsonify(), code
+
+    @jwt_required()
+    @super_admin_and_artist_manager_only
+    def put(self):
+        user_id = request.args.get("user_id", None)
+        if user_id is None:
+            return Response(status=400)
+
+        scheme = UserUpdateScheme()
+
+        try:
+            data = scheme.load(request.json)
+            service = UserUpdateService(id=user_id, data=data)
+            service.start()
+            status_code = 202 if service.status else 400
+            return Response(status=status_code)
+        except ValidationError as err:
+            return jsonify(err.messages), 400
