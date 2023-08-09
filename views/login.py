@@ -20,6 +20,7 @@ class LoginView(MethodView):
                 identity={
                     "email": login_service.user.get("email"),
                     "role": login_service.user.get("role"),
+                    "id": login_service.user.get("id"),
                 },
             )
             return jsonify(access_token=access_token), 200
