@@ -36,14 +36,14 @@ class UserView(MethodView):
         return jsonify({"count": len(data), "page": int(page), "user": data}), 200
 
     @jwt_required()
-    @super_admin_only
+    @super_admin_and_artist_manager_only
     def get(self):
         if request.args.get("id", None) is not None:
             return self._get_single_user()
 
-        role = request.args.get("role", None)
+        role = request.args.get("role", 3)
 
-        if role is not None and int(role) in self.roles:
+        if int(role) in self.roles:
             return self._get_filtered_users()
 
         return self._get_all_users()
