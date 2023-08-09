@@ -35,3 +35,10 @@ When executed, the command should gracefully pirouette, unveiling a symphony of 
 }
 ```
 
+
+
+
+## Environment Variables
+
+Kindly locate the exemplar environment variable within the __.example.env__ file.
+
