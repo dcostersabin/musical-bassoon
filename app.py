@@ -12,6 +12,7 @@ from views.register import RegisterUserView
 from views.login import LoginView
 from views.users import UserView
 from views.music import MusicView
+from views.profile import ProfileView
 from views.dump_data import DumpDataView
 from flask_jwt_extended import JWTManager
 
@@ -35,6 +36,7 @@ app.add_url_rule("/login", view_func=LoginView.as_view("login"))
 app.add_url_rule("/users", view_func=UserView.as_view("user"))
 app.add_url_rule("/music", view_func=MusicView.as_view("music"))
 app.add_url_rule("/dump", view_func=DumpDataView.as_view("dump"))
+app.add_url_rule("/profile", view_func=ProfileView.as_view("profile"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
