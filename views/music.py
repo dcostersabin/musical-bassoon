@@ -10,6 +10,7 @@ from services.music_create import MusicCreateService
 from services.music_delete import MusicDeleteService
 from services.music_update import MusicUpdateService
 from permissions import add_music_permission
+from permissions import artist_only
 from flask_jwt_extended import get_jwt_identity
 from models.musics import Musics
 from db.crud import CRUDBase
@@ -24,13 +25,13 @@ class MusicView(MethodView):
         page = request.args.get("page", 1)
         data = self.music_crud_base.filter(
             {"user_id": info.get("id")},
-            order_by="title",
-            dec=False,
+            order_by="updated_at",
+            dec=True,
             page_number=int(page),
         )
         return (
             jsonify(
-                {"count": len(data), "page": int(page), "user": data},
+                {"count": len(data), "page": int(page), "music": data},
             ),
             200,
         )
@@ -81,6 +82,7 @@ class MusicView(MethodView):
         return self._list_users_music()
 
     @jwt_required()
+    @artist_only
     def delete(self):
         info = get_jwt_identity()
         music_id = request.args.get("music_id", None)
@@ -93,6 +95,7 @@ class MusicView(MethodView):
         return Response(status=status_code)
 
     @jwt_required()
+    @artist_only
     def put(self):
         scheme = MusicUpdateScheme()
 

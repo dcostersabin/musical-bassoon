@@ -32,6 +32,9 @@ class MusicUploadService:
     def check_user(self) -> bool:
         data = {"email": self.data.get("email", 0), "role": 3}
         user = self.user_crud_base.filter(data=data)
+        if user is None:
+            return False
+
         if len(user) == 1:
             self.user = user[0]
             return True
