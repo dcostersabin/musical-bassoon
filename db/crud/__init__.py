@@ -57,6 +57,8 @@ class CRUDBase:
             except IntegrityError as e:
                 print(e)
                 self.errors.add(IntegrityError)
+                self.conn.rollback()
+                self.conn.commit()
             except DatabaseError as e:
                 print(e)
                 self.errors.add(DatabaseError)
@@ -64,6 +66,8 @@ class CRUDBase:
                 print(e)
                 self.errors.add(OperationalError)
                 print(f"{Fore.RED} Could Not Execute Query {query}{Style.RESET_ALL}")
+            finally:
+                cursor.close()
 
     def insert(self, data: dict):
         model = self.model()
