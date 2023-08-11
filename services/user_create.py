@@ -8,6 +8,7 @@ class UserCreateService:
     def __init__(self, data: dict):
         self.data = data
         self.status = False
+        self.id = None
 
     def start(self):
         self._run()
@@ -27,5 +28,6 @@ class UserCreateService:
 
     def _save(self):
         crud_obj = CRUDBase(model=Users)
-        crud_obj.insert(data=self.data)
+        data = crud_obj.insert(data=self.data)
+        self.id = data.get("id", None)
         self.status = True if len(crud_obj.errors) == 0 else False

@@ -45,7 +45,7 @@ class UserUpdateScheme(Schema):
         ],
     )
     dob = fields.Date(required=True)
-    gender = fields.Str(required=True, validate=OneOf(["M", "F"]))
+    gender = fields.Str(required=True, validate=OneOf(["M", "F", "O"]))
     address = fields.Str(required=True, validate=Length(min=3, max=255))
 
 

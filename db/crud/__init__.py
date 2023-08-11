@@ -77,8 +77,9 @@ class CRUDBase:
         formatted_valid_values = self._format_values(valid_fields=valid_fields)
         values = tuple([data.get(i) for i in valid_fields])
 
-        query = f"INSERT INTO app_{model.tname}({formatted_valid_fields}) VALUES ({formatted_valid_values});"
-        self._execute_query(query=query, values=values)
+        query = f"INSERT INTO app_{model.tname}({formatted_valid_fields}) VALUES ({formatted_valid_values}) RETURNING id as id;"
+        insert_id = self._execute_query(query=query, values=values)
+        return insert_id[0] if len(insert_id) > 0 else {"id": None}
 
     def delete(self, id: str):
         query = f"DELETE FROM app_{self.model().tname} WHERE id = %s;"
