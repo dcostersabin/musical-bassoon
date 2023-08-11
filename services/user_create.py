@@ -29,5 +29,6 @@ class UserCreateService:
     def _save(self):
         crud_obj = CRUDBase(model=Users)
         data = crud_obj.insert(data=self.data)
-        self.id = data.get("id", None)
+        if data is not None:
+            self.id = data.get("id", None)
         self.status = True if len(crud_obj.errors) == 0 else False

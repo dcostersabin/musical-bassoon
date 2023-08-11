@@ -14,6 +14,7 @@ from views.users import UserView
 from views.music import MusicView
 from views.profile import ProfileView
 from views.dump_data import DumpDataView
+from views.upload_music import UploadMusicView
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
@@ -37,6 +38,7 @@ app.add_url_rule("/users", view_func=UserView.as_view("user"))
 app.add_url_rule("/music", view_func=MusicView.as_view("music"))
 app.add_url_rule("/dump", view_func=DumpDataView.as_view("dump"))
 app.add_url_rule("/profile", view_func=ProfileView.as_view("profile"))
+app.add_url_rule("/upload", view_func=UploadMusicView.as_view("upload"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

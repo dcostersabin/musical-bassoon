@@ -79,6 +79,8 @@ class CRUDBase:
 
         query = f"INSERT INTO app_{model.tname}({formatted_valid_fields}) VALUES ({formatted_valid_values}) RETURNING id as id;"
         insert_id = self._execute_query(query=query, values=values)
+        if insert_id is None:
+            return None
         return insert_id[0] if len(insert_id) > 0 else {"id": None}
 
     def delete(self, id: str):

@@ -55,3 +55,12 @@ class MusicUpdateScheme(Schema):
     genre = fields.Str(
         required=True, validate=OneOf(["country", "classic", "rock", "jazz"])
     )
+
+
+class MusicUploadScheme(Schema):
+    email = fields.Email(required=True)
+    title = fields.Str(required=True, validate=Length(min=3, max=255))
+    album_name = fields.Str(required=True, validate=Length(min=3, max=255))
+    genre = fields.Str(
+        required=True, validate=OneOf(["country", "classic", "rock", "jazz"])
+    )
