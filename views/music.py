@@ -51,7 +51,7 @@ class MusicView(MethodView):
 
         return (
             jsonify(
-                {"count": len(data), "page": int(page), "user": data},
+                {"count": len(data), "page": int(page), "music": data},
             ),
             200,
         )
